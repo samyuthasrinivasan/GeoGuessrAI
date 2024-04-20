@@ -1,15 +1,17 @@
 import numpy as np
 
 class Perceptron:
-    def __init__(self, name, num_inputs):
+    def __init__(self, name, height, width):
         self.name = name
-        self.weights = np.random.rand(num_inputs)
+        self.height = height;
+        self.width = width;
+        self.weights = np.random.rand(height*width)
         self.bias = np.random.rand()
 
     def predict(self, image):
         # Flatten the image matrix into a 1D array
         flattened_image = image.flatten()
-        
+
         # Compute the weighted sum
         weighted_sum = np.dot(flattened_image, self.weights) + self.bias
         
@@ -29,8 +31,32 @@ class Perceptron:
         return self.name
 
     def get_confidence(self, image):
+        height = image.shape[0]
+        width = image.shape[1]
+
+        data_height = self.height
+        data_width = self.width
+
+        print(height)
+        print(width)
+        print(data_height)
+        print(data_width)
+
+        for x in range(0, width, data_width):
+            if x >= data_width:
+                break
+            for y in range(0, height, data_height):
+                if y >= data_height:
+                    break
+                confidence = self.helper_confidence(image[height - data_height: height, width - data_width: width])
+
+        return confidence
+
+    def helper_confidence(self, image):
         # Flatten the image matrix into a 1D array
         flattened_image = image.flatten()
+
+        print(flattened_image)
         
         # Compute the weighted sum
         weighted_sum = np.dot(flattened_image, self.weights) + self.bias
