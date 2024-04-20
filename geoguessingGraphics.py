@@ -15,15 +15,21 @@ class Graphics():
 
     locations = {
         "SPAIN" : (-60, 85),
-        "POLAND" : (-25, 108),
-        "KENYA" : (15, -10),
         "SENEGAL" : (-80, 13),
         }
 
     def go(self, country):
         self.pin.goto(self.locations[country])
+        self.goWrite(country)
         self.win.update()
+        turtle.done()
 
+    def goWrite(self, country):
+        t = turtle.Turtle(shape = "blank")
+        t.pu()
+        t.speed(0)
+        t.goto(260, 150)
+        t.pd()
+        t.write(f"GUESS: {country.upper()}", font=("Arial", 16, "normal"), align = "right")
 
     win.update()
-    turtle.done()
