@@ -6,7 +6,7 @@ class Perceptron(): # implement
     self.name = name
     self.dataset = dataset
 
-  def get_confidence(self, testImg): # implement
+  def get_confidence(self): # implement
 
     # for img in dataset
 
@@ -20,3 +20,6 @@ class Perceptron(): # implement
 
   def __str__(self):
     return self.name
+  
+  def get_dataset(self):
+    return self.dataset

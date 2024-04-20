@@ -1,17 +1,17 @@
+from AI import AI
+from Perceptron import Perceptron
 import geoguessingGraphics
-import Perceptron
-import AI
+# import Perceptron
+# import AI
 import cv2 as cv
-import numpy as np
-import matplotlib
-import matplotlib.pyplot as plt
 import sys
 import os
 from zipfile import ZipFile
+from geoguessingGraphics import Graphics
 
 
 class Main():
-  DIRECTORY_NAME = "/content/FOLDER/"
+  DIRECTORY_NAME = "FOLDER/"
 
   def create_perceptron(self, name, dataset):
     return Perceptron(name, dataset)
@@ -29,13 +29,13 @@ class Main():
     for meta in list_of_metas:
       # ai.add_perceptron(folder.split('_')[0], self.create_perceptron(meta.split('_')[0]))
       list_of_imgs = []
-      DIRECTORY = DIRECTORY + str(meta)
-      files_in_folder = os.listdir(DIRECTORY)
+      NEW_DIRECTORY = DIRECTORY + str(meta)
+      files_in_folder = os.listdir(NEW_DIRECTORY)
       if ".DS_Store" in files_in_folder:
         files_in_folder.remove(".DS_Store")
       for f in files_in_folder:
         # sets rgb array from the file
-        img = cv.imread(cv.samples.findFile(DIRECTORY + "/" + str(f)))
+        img = cv.imread(cv.samples.findFile(NEW_DIRECTORY + "/" + str(f)))
         sizes = str(meta).split("_")[1].split("x")
         img = cv.resize(img, (int(sizes[0]), int(sizes[1]))) # resizing
         # img = img[0:, 90:150] # cropping image
@@ -54,21 +54,25 @@ class Main():
 
   # start here
 main = Main()
-ZIP_FILE = "/content/FOLDER.zip"
-COUNTRY_PATHS = ["COUNTRY/"]
-META_PATHS = ["NAME_HXW/"]
+ZIP_FILE = "FOLDER.zip"
+COUNTRY_PATHS = ["SENEGAL/", "SPAIN/"]
 
-with ZipFile(ZIP_FILE, 'r') as zip:
-      zip.extractall()
-      print('Done')
+# with ZipFile(ZIP_FILE, 'r') as zip:
+#       zip.extractall()
+#       print('Done')
 
 ai = main.create_AI()
 
 for country in COUNTRY_PATHS:
   dataset = main.generate_dataset(country, ai)
-  print(ai.get_dictionary())
 
-prediction = ai.predict()
+prediction = ai.predict()[0]
+predicted_country = "NONE"
+for country in COUNTRY_PATHS:
+  list_of_metas = os.listdir("FOLDER/" + country)
+  for meta in list_of_metas:
+    if meta.split("_")[0] == prediction[0].get_name():
+      predicted_country = country.split("/")[0]
 
-graphics = geoguessingGraphics()
-graphics.go(prediction)
+graphics = Graphics()
+graphics.go(predicted_country)
