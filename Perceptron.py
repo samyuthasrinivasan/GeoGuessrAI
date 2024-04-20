@@ -42,21 +42,22 @@ class Perceptron:
         print(data_height)
         print(data_width)
 
-        for x in range(0, width, data_width):
-            if x >= data_width:
+        confidence = -1
+        for x in range(0, width, 20):
+            if x + data_width >= width:
                 break
-            for y in range(0, height, data_height):
-                if y >= data_height:
+            for y in range(0, height, 20):
+                if y + data_height >= height:
                     break
-                confidence = self.helper_confidence(image[height - data_height: height, width - data_width: width])
+                curr = self.helper_confidence(image[y: y + data_height, x: x + data_width])
+                if confidence < curr:
+                  confidence = curr
 
         return confidence
 
     def helper_confidence(self, image):
         # Flatten the image matrix into a 1D array
         flattened_image = image.flatten()
-
-        print(flattened_image)
         
         # Compute the weighted sum
         weighted_sum = np.dot(flattened_image, self.weights) + self.bias
