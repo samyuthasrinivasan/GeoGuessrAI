@@ -29,12 +29,16 @@ class Perceptron:
         return self.name
 
     def get_confidence(self, image):
-        # Flatten the image matrix into a 1D array
-        flattened_image = image.flatten()
-        
-        # Compute the weighted sum
-        weighted_sum = np.dot(flattened_image, self.weights) + self.bias
-        
-        # Apply activation function (Step function)
-        confidence = weighted_sum
-        return confidence
+      # Flatten the image matrix into a 1D array
+      flattened_image = image.flatten()
+
+      # Check if the number of inputs matches the number of weights
+      if len(flattened_image) != len(self.weights):
+          raise ValueError("Number of elements in the image vector does not match the number of weights.")
+
+      # Compute the weighted sum
+      weighted_sum = np.dot(flattened_image, self.weights) + self.bias
+
+      # Apply activation function (Step function)
+      confidence = weighted_sum
+      return confidence
