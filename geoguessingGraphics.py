@@ -26,3 +26,4 @@ class Graphics():
 
 
     win.update()
+    turtle.done()
