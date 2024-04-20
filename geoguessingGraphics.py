@@ -19,8 +19,9 @@ locations = {
     "senegal" : (-80, 13),
     }
 
-
-pin.goto(locations["senegal"])
+def go(country):
+    pin.goto(locations[country])
+    win.update()
 
 
 win.update()

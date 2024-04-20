@@ -1,3 +1,15 @@
+import geoguessingGraphics
+import Perceptron
+import AI
+import cv2 as cv
+import numpy as np
+import matplotlib
+import matplotlib.pyplot as plt
+import sys
+import os
+from zipfile import ZipFile
+
+
 class Main():
   DIRECTORY_NAME = "/content/FOLDER/"
 
@@ -24,10 +36,10 @@ class Main():
       for f in files_in_folder:
         # sets rgb array from the file
         img = cv.imread(cv.samples.findFile(DIRECTORY + "/" + str(f)))
-        img = cv.resize(img, (500, 500)) # resizing
+        sizes = str(meta).split("_")[1].split("x")
+        img = cv.resize(img, (int(sizes[0]), int(sizes[1]))) # resizing
         # img = img[0:, 90:150] # cropping image
         # displays the image
-        cv2_imshow(img)
         if img is None:
           sys.exit("Could not read the image.")
 
@@ -55,3 +67,8 @@ ai = main.create_AI()
 for country in COUNTRY_PATHS:
   dataset = main.generate_dataset(country, ai)
   print(ai.get_dictionary())
+
+prediction = ai.predict()
+
+graphics = geoguessingGraphics()
+graphics.go(prediction)
