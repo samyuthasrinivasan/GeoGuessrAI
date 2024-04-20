@@ -24,3 +24,4 @@ class AI():
 
   def get_dictionary(self):
     return self.registeredCountries
+
