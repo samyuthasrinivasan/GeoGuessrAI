@@ -13,8 +13,8 @@ from geoguessingGraphics import Graphics
 class Main():
   DIRECTORY_NAME = "FOLDER/"
 
-  def create_perceptron(self, name, dataset):
-    return Perceptron(name, dataset)
+  def create_perceptron(self, name, height, width):
+    return Perceptron(name, height, width)
 
   def create_AI(self):
     return AI()
@@ -38,6 +38,7 @@ class Main():
         img = cv.imread(cv.samples.findFile(NEW_DIRECTORY + "/" + str(f)))
         sizes = str(meta).split("_")[1].split("x")
         img = cv.resize(img, (int(sizes[0]), int(sizes[1]))) # resizing
+        img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
         # img = img[0:, 90:150] # cropping image
         # displays the image
         if img is None:
@@ -45,7 +46,11 @@ class Main():
 
         list_of_imgs.append(img)
 
-      list_of_perceptrons.append(self.create_perceptron(meta.split('_')[0], list_of_imgs))
+      height = int(meta.split('_')[1].split('x')[0])
+      width = int(meta.split('_')[1].split('x')[1])
+      per = self.create_perceptron(meta.split('_')[0], height, width)
+      per.train(list_of_imgs, num_epochs=100, learning_rate=0.01)
+      list_of_perceptrons.append(per)
       country_metas.update({meta.split('_')[0]: list_of_imgs})
     ai.add_perceptron(folder.split('/')[0], list_of_perceptrons)
 
@@ -61,12 +66,18 @@ COUNTRY_PATHS = ["SENEGAL/", "SPAIN/"]
 #       zip.extractall()
 #       print('Done')
 
+
 ai = main.create_AI()
 
 for country in COUNTRY_PATHS:
   dataset = main.generate_dataset(country, ai)
 
-prediction = ai.predict()[0]
+img = cv.imread(cv.samples.findFile("Picture1.jpeg"))
+img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+#img = cv.resize(img, (800, 2800))
+prediction = ai.predict(img)[0]
+print(prediction[1])
+
 predicted_country = "NONE"
 for country in COUNTRY_PATHS:
   list_of_metas = os.listdir("FOLDER/" + country)
@@ -74,5 +85,6 @@ for country in COUNTRY_PATHS:
     if meta.split("_")[0] == prediction[0].get_name():
       predicted_country = country.split("/")[0]
 
+print(predicted_country)
 graphics = Graphics()
 graphics.go(predicted_country)
