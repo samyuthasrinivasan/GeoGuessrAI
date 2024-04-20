@@ -72,11 +72,12 @@ ai = main.create_AI()
 for country in COUNTRY_PATHS:
   dataset = main.generate_dataset(country, ai)
 
-img = cv.imread(cv.samples.findFile("Picture1.jpeg"))
+img = cv.imread(cv.samples.findFile("SPAIN.jpeg"))
 img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 #img = cv.resize(img, (800, 2800))
-prediction = ai.predict(img)[0]
-print(prediction[1])
+predict_list = ai.predict(img)
+prediction = predict_list[0]
+print(predict_list)
 
 predicted_country = "NONE"
 for country in COUNTRY_PATHS:
